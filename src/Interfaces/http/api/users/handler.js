@@ -1,5 +1,5 @@
 const autoBind = require('auto-bind');
-const AddUserUseCase = require('../../../../Applications/use_case/AddUserUseCase');
+const AddUserUseCase = require('../../../../Applications/use_case/users/AddUserUseCase');
 
 class UsersHandler {
   constructor(container) {

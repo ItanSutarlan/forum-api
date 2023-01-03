@@ -1,11 +1,11 @@
-const RegisterUser = require('../../../Domains/users/entities/RegisterUser');
-const RegisteredUser = require('../../../Domains/users/entities/RegisteredUser');
-const UserRepository = require('../../../Domains/users/UserRepository');
-const PasswordHash = require('../../security/PaswordHash');
+const RegisterUser = require('../../../../Domains/users/entities/RegisterUser');
+const RegisteredUser = require('../../../../Domains/users/entities/RegisteredUser');
+const UserRepository = require('../../../../Domains/users/UserRepository');
+const PasswordHash = require('../../../security/PaswordHash');
 const AddUserUseCase = require('../AddUserUseCase');
 
 describe('AddUserUseCase', () => {
-  it('should orchestrating the add user action correctly', async () => {
+  it('should orchestrate the add user action correctly', async () => {
     // Arrange
     const useCasePayload = {
       username: 'dicoding',

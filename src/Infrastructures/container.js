@@ -19,10 +19,10 @@ const AuthenticationTokenManager = require('../Applications/security/Authenticat
 const JwtTokenManager = require('./security/JwtTokenManager');
 
 // use case
-const AddUserUseCase = require('../Applications/use_case/AddUserUseCase');
-const LoginUserUseCase = require('../Applications/use_case/LoginUserUsecase');
-const LogoutUserUseCase = require('../Applications/use_case/LogoutUserUseCase');
-const RefreshAuthenticationUseCase = require('../Applications/use_case/RefreshAuthenticationUseCase');
+const AddUserUseCase = require('../Applications/use_case/users/AddUserUseCase');
+const LoginUserUseCase = require('../Applications/use_case/users/LoginUserUsecase');
+const LogoutUserUseCase = require('../Applications/use_case/users/LogoutUserUseCase');
+const RefreshAuthenticationUseCase = require('../Applications/use_case/users/RefreshAuthenticationUseCase');
 
 // creating container
 const container = createContainer();

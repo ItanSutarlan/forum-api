@@ -1,9 +1,9 @@
-const UserRepository = require('../../../Domains/users/UserRepository');
-const AuthenticationRepository = require('../../../Domains/authentications/AuthenticationRepository');
-const LoginUser = require('../../../Domains/users/entities/LoginUser');
-const PasswordHash = require('../../security/PaswordHash');
-const AuthenticationTokenManager = require('../../security/AuthenticationTokenManager');
-const NewAuth = require('../../../Domains/authentications/entities/NewAuth');
+const UserRepository = require('../../../../Domains/users/UserRepository');
+const AuthenticationRepository = require('../../../../Domains/authentications/AuthenticationRepository');
+const LoginUser = require('../../../../Domains/users/entities/LoginUser');
+const PasswordHash = require('../../../security/PaswordHash');
+const AuthenticationTokenManager = require('../../../security/AuthenticationTokenManager');
+const NewAuth = require('../../../../Domains/authentications/entities/NewAuth');
 const LoginUserUseCase = require('../LoginUserUsecase');
 
 beforeEach(() => {
@@ -11,13 +11,13 @@ beforeEach(() => {
   LoginUser.mockClear();
 });
 
-jest.mock('../../../Domains/users/entities/LoginUser', () => jest.fn().mockImplementationOnce((payload) => ({
+jest.mock('../../../../Domains/users/entities/LoginUser', () => jest.fn().mockImplementationOnce((payload) => ({
   username: payload.username,
   password: payload.password,
 })));
 
 describe('GetAuthenticationUseCase', () => {
-  it('should orchestrating the get authentication action correctly', async () => {
+  it('should orchestrate the get authentication action correctly', async () => {
     // Arrange
     const useCasePayload = {
       username: 'dicoding',

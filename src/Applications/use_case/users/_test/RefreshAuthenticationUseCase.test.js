@@ -1,9 +1,9 @@
-const AuthenticationRepository = require('../../../Domains/authentications/AuthenticationRepository');
-const RefreshAuth = require('../../../Domains/authentications/entities/RefreshAuth');
-const AuthenticationTokenManager = require('../../security/AuthenticationTokenManager');
+const AuthenticationRepository = require('../../../../Domains/authentications/AuthenticationRepository');
+const RefreshAuth = require('../../../../Domains/authentications/entities/RefreshAuth');
+const AuthenticationTokenManager = require('../../../security/AuthenticationTokenManager');
 const RefreshAuthenticationUseCase = require('../RefreshAuthenticationUseCase');
 
-jest.mock('../../../Domains/authentications/entities/RefreshAuth');
+jest.mock('../../../../Domains/authentications/entities/RefreshAuth');
 
 describe('RefreshAuthenticationUseCase', () => {
   it('should orchestrate the RefreshAuthenticationUseCase action correctly', async () => {

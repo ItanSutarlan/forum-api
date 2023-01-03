@@ -1,11 +1,11 @@
-const AuthenticationRepository = require('../../../Domains/authentications/AuthenticationRepository');
-const RefreshAuth = require('../../../Domains/authentications/entities/RefreshAuth');
+const AuthenticationRepository = require('../../../../Domains/authentications/AuthenticationRepository');
+const RefreshAuth = require('../../../../Domains/authentications/entities/RefreshAuth');
 const LogoutUserUseCase = require('../LogoutUserUseCase');
 
-jest.mock('../../../Domains/authentications/entities/RefreshAuth');
+jest.mock('../../../../Domains/authentications/entities/RefreshAuth');
 
 describe('LogoutUserUseCase', () => {
-  it('should orchestrating the delete authentication action correctly', async () => {
+  it('should orchestrate the delete authentication action correctly', async () => {
     // Arrange
     const useCasePayload = {
       refreshToken: 'refreshToken',

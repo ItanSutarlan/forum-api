@@ -1,4 +1,4 @@
-const RefreshAuth = require('../../Domains/authentications/entities/RefreshAuth');
+const RefreshAuth = require('../../../Domains/authentications/entities/RefreshAuth');
 
 class RefreshAuthenticationUseCase {
   constructor({

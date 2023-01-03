@@ -1,7 +1,7 @@
 const autoBind = require('auto-bind');
-const LoginUserUseCase = require('../../../../Applications/use_case/LoginUserUsecase');
-const LogoutUserUseCase = require('../../../../Applications/use_case/LogoutUserUseCase');
-const RefreshAuthenticationUseCase = require('../../../../Applications/use_case/RefreshAuthenticationUseCase');
+const LoginUserUseCase = require('../../../../Applications/use_case/users/LoginUserUsecase');
+const LogoutUserUseCase = require('../../../../Applications/use_case/users/LogoutUserUseCase');
+const RefreshAuthenticationUseCase = require('../../../../Applications/use_case/users/RefreshAuthenticationUseCase');
 
 class AuthenticationsHandler {
   constructor(container) {
