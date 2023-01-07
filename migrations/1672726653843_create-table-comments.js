@@ -13,15 +13,10 @@ exports.up = (pgm) => {
       notNull: true,
     },
     owner: {
-      type: 'VARCHAR(10)',
+      type: 'VARCHAR(50)',
       notNull: true,
       references: 'users',
       onDelete: 'cascade',
-    },
-    date: {
-      type: 'timestamp',
-      notNull: true,
-      default: pgm.func('current_timestamp'),
     },
     parent_id: {
       type: 'VARCHAR(50)',
@@ -33,6 +28,11 @@ exports.up = (pgm) => {
       type: 'boolean',
       notNull: true,
       default: false,
+    },
+    date: {
+      type: 'timestamp',
+      notNull: true,
+      default: pgm.func('current_timestamp'),
     },
   });
 };

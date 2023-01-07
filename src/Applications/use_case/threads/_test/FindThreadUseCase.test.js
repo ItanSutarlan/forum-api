@@ -1,3 +1,4 @@
+const CommentRepository = require('../../../../Domains/comments/CommentRepository');
 const ThreadRepository = require('../../../../Domains/threads/ThreadRepository');
 const FindThreadUseCase = require('../FindThreadUseCase');
 
@@ -7,53 +8,47 @@ describe('FindThreadUseCase', () => {
     const useCasePayload = {
       id: 'thread-AqVg2b9JyQXR6wSQ2TmH4',
     };
-    const useCaseResponse = {
-      thread: {
-        id: 'thread-AqVg2b9JyQXR6wSQ2TmH4',
-        title: 'sebuah thread',
-        body: 'sebuah body thread',
-        date: '2021-08-08T07:59:16.198Z',
-        username: 'dicoding',
-        comments: [
-          {
-            id: 'comment-q_0uToswNf6i24RDYZJI3',
-            username: 'dicoding',
-            date: '2021-08-08T07:59:18.982Z',
-            replies: [
-              {
-                id: 'reply-BErOXUSefjwWGW1Z10Ihk',
-                content: '**balasan telah dihapus**',
-                date: '2021-08-08T07:59:48.766Z',
-                username: 'johndoe',
-              },
-              {
-                id: 'reply-xNBtm9HPR-492AeiimpfN',
-                content: 'sebuah balasan',
-                date: '2021-08-08T08:07:01.522Z',
-                username: 'dicoding',
-              },
-            ],
-            content: 'sebuah comment',
-          },
-        ],
-      },
+    const thread = {
+      id: 'thread-AqVg2b9JyQXR6wSQ2TmH4',
+      title: 'sebuah thread',
+      body: 'sebuah body thread',
+      date: '2021-08-08T07:59:16.198Z',
+      username: 'dicoding',
     };
+    const comments = [
+      {
+        id: 'comment-q_0uToswNf6i24RDYZJI3',
+        username: 'dicoding',
+        date: '2021-08-08T07:59:18.982Z',
+        content: 'sebuah comment',
+      },
+    ];
     /** mocking needed function */
     const mockThreadRepository = new ThreadRepository();
+    const mockCommentRepository = new CommentRepository();
     mockThreadRepository.getThreadById = jest.fn()
-      .mockImplementation(() => Promise.resolve(useCaseResponse));
-
+      .mockImplementation(() => Promise.resolve(thread));
+    mockCommentRepository.getCommentsById = jest.fn()
+      .mockImplementation(() => Promise.resolve(comments));
     /** creating use case instance */
     const findThreadUseCase = new FindThreadUseCase({
       threadRepository: mockThreadRepository,
+      commentRepository: mockCommentRepository,
     });
 
     // Action
-    const thread = await findThreadUseCase.execute(useCasePayload);
+    const result = await findThreadUseCase.execute(useCasePayload);
 
     // Assert
     expect(mockThreadRepository.getThreadById).toBeCalledWith(useCasePayload.id);
-    expect(thread).toStrictEqual(useCaseResponse);
+    expect(mockCommentRepository.getCommentsById).toBeCalledWith(useCasePayload.id);
+    expect(result).toEqual(expect.objectContaining({
+      ...thread,
+    }));
+    expect(result).toHaveProperty('comments');
+    expect(result.comments).toEqual(expect.arrayContaining([
+      ...comments,
+    ]));
   });
 
   it('should throw an error when payload did not contain needed property', async () => {
