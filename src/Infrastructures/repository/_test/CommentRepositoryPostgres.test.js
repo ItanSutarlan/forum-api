@@ -47,13 +47,13 @@ describe('CommentRepositoryPostgres', () => {
     });
   });
 
-  describe('getCommentsById function', () => {
+  describe('getCommentsByParentId function', () => {
     it('should return an empty array when comment is not found', async () => {
       // Arrange
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
       // Action
-      const comments = await commentRepositoryPostgres.getCommentsById('thread-123');
+      const comments = await commentRepositoryPostgres.getCommentsByParentId('thread-123');
 
       // Assert
       expect(comments).toHaveLength(0);
@@ -75,62 +75,48 @@ describe('CommentRepositoryPostgres', () => {
 
       const comment1 = {
         id: 'comment-123',
-        content: 'sebuah comment',
-        owner: 'user-123',
+        owner: 'user-223',
+        content: 'sebuah comment1',
         parentId: thread1.id,
+        date: new Date(),
+        isDeleted: true,
       };
       await CommentsTableTestHelper.addComment(comment1);
 
-      const reply1 = {
-        id: 'reply-223',
-        owner: 'user-223',
-        content: 'sebuah comment',
-        parentId: comment1.id,
-        isDeleted: true,
-      };
-      await CommentsTableTestHelper.addComment(reply1);
-
-      const reply2 = {
-        id: 'reply-323',
+      const comment2 = {
+        id: 'comment-223',
         owner: 'user-123',
-        content: 'sebuah text',
-        parentId: comment1.id,
+        content: 'sebuah comment2',
+        parentId: thread1.id,
+        date: new Date(),
       };
-      await CommentsTableTestHelper.addComment(reply2);
+      await CommentsTableTestHelper.addComment(comment2);
 
       /** creating repository instance */
       const commentRepositoryPostgres = new CommentRepositoryPostgres(pool, {});
 
       // Action
-      const comments = await commentRepositoryPostgres.getCommentsById('thread-123');
+      const comments = await commentRepositoryPostgres.getCommentsByParentId(thread1.id);
 
       // Assert
-      /** checking comments value */
-      expect(comments).toHaveLength(1);
+      expect(comments).toHaveLength(2);
+
+      /** checking replies value */
       expect(comments)
         .toEqual(expect.arrayContaining([
           expect.objectContaining({
             id: comment1.id,
-            username: 'dicoding',
-            content: comment1.content,
-            date: expect.any(Date),
-            replies: expect.any(Array),
-          }),
-        ]));
-      /** checking replies value */
-      expect(comments[0].replies)
-        .toEqual(expect.arrayContaining([
-          expect.objectContaining({
-            id: reply1.id,
             username: 'johndoe',
-            content: '**balasan telah dihapus**',
-            date: expect.any(Date),
+            content: comment1.content,
+            date: comment1.date,
+            is_deleted: true,
           }),
           expect.objectContaining({
-            id: reply2.id,
+            id: comment2.id,
             username: 'dicoding',
-            content: reply2.content,
-            date: expect.any(Date),
+            content: comment2.content,
+            date: comment2.date,
+            is_deleted: false,
           }),
         ]));
     });

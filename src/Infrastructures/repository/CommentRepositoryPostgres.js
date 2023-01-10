@@ -26,56 +26,21 @@ class CommentRepositoryPostgres extends CommentRepository {
     return result.rows[0];
   }
 
-  async getCommentsById(id) {
-    const query = `WITH RECURSIVE comments_cte (
-                    id,
-                    path,
-                    username,
-                    date,
-                    content
-                  ) AS (
-                    SELECT
-                      c.id,
-                      concat('/', c.parent_id),
-                      u.username,
-                      c.date,
-                      CASE
-                        WHEN c.is_deleted THEN '**komentar telah dihapus**'
-                        ELSE c.content
-                      END AS content
-                    FROM
-                      "comments" AS c
-                    JOIN
-                      users AS u ON c.owner = u.id
-                    WHERE
-                      parent_id = $1
-                    UNION ALL
-                    SELECT
-                      r.id,
-                      concat(path, '/', r.parent_id),
-                      users.username,
-                      r.date,
-                      CASE
-                        WHEN r.is_deleted THEN '**balasan telah dihapus**'
-                        ELSE r.content
-                      END AS content
-                    FROM
-                      "comments" r
-                      JOIN
-                        users ON r.owner = users.id
-                      JOIN
-                        comments_cte ON comments_cte.id = r.parent_id
-                  )
-                  SELECT
-                    *
+  async getCommentsByParentId(parentId) {
+    const query = `SELECT
+                    c.id, c.content, u.username, c.date, c.is_deleted
                   FROM
-                    comments_cte
+                    comments AS c
+                  INNER JOIN
+                    users AS u ON c.owner = u.id
+                  WHERE
+                    c.parent_id = $1
                   ORDER BY
                     date ASC;`;
 
-    const result = await this._pool.query(query, [id]);
+    const result = await this._pool.query(query, [parentId]);
 
-    return this._getNestedRepliesRecursively(`/${id}`, result.rows);
+    return result.rows;
   }
 
   async checkAvailabilityComment({ id, parentId }) {
@@ -104,30 +69,6 @@ class CommentRepositoryPostgres extends CommentRepository {
     };
 
     await this._pool.query(query);
-  }
-
-  _getNestedRepliesRecursively(path, comments) {
-    const result = comments.filter((comment) => comment.path === path);
-    if (!result.length) {
-      return [];
-    }
-
-    return result.map(({
-      id, date, content, username,
-    }) => {
-      const comment = {
-        id,
-        username,
-        content,
-        date,
-      };
-      const replies = this._getNestedRepliesRecursively(`${path}/${id}`, comments);
-      if (!replies.length) {
-        return comment;
-      }
-      comment.replies = replies;
-      return comment;
-    });
   }
 }
 

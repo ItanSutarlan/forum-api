@@ -26,6 +26,23 @@ class ReplyRepositoryPostgres extends ReplyRepository {
     return result.rows[0];
   }
 
+  async getRepliesToComment(commentId) {
+    const query = `SELECT
+                    r.id, r.content, u.username, r.date, r.is_deleted
+                  FROM
+                    comments AS r
+                  INNER JOIN
+                    users AS u ON r.owner = u.id
+                  WHERE
+                    r.parent_id = $1
+                  ORDER BY
+                    date ASC;`;
+
+    const result = await this._pool.query(query, [commentId]);
+
+    return result.rows;
+  }
+
   async checkAvailabilityReply({ id, parentId }) {
     const result = await this._pool.query('SELECT id FROM comments WHERE id = $1 AND parent_id = $2', [id, parentId]);
 

@@ -57,13 +57,14 @@ describe('ThreadRepositoryPostgres', () => {
     it('should return the correct property and value when id is found', async () => {
       // Arrange
       await UsersTableTestHelper.addUser({ id: 'user-123', username: 'dicoding' });
-      const thread1 = {
+      const thread = {
         id: 'thread-123',
         title: 'sebuah thread',
         body: 'sebuah body thread',
         owner: 'user-123',
+        date: new Date(),
       };
-      await ThreadsTableTestHelper.addThread(thread1);
+      await ThreadsTableTestHelper.addThread(thread);
 
       /** creating repository instance */
       const threadRepositoryPostgres = new ThreadRepositoryPostgres(pool, {});
@@ -75,10 +76,10 @@ describe('ThreadRepositoryPostgres', () => {
       /** checking thread property and value */
       expect(result)
         .toEqual(expect.objectContaining({
-          id: thread1.id,
-          title: thread1.title,
-          body: thread1.body,
-          date: expect.any(Date),
+          id: thread.id,
+          title: thread.title,
+          body: thread.body,
+          date: thread.date,
           username: 'dicoding',
         }));
     });
