@@ -68,8 +68,6 @@ describe('FindThreadUseCase', () => {
       .mockImplementationOnce(() => Promise.resolve([
         reply1, reply2,
       ]));
-    mockReplyRepository.getRepliesToComment
-      .mockImplementationOnce(() => Promise.resolve([]));
 
     /** creating use case instance */
     const findThreadUseCase = new FindThreadUseCase({
@@ -84,8 +82,8 @@ describe('FindThreadUseCase', () => {
     // Assert
     expect(mockThreadRepository.getThreadById).toBeCalledWith(useCasePayload.id);
     expect(mockCommentRepository.getCommentsByParentId).toBeCalledWith(useCasePayload.id);
-    expect(mockReplyRepository.getRepliesToComment).toBeCalledWith(comment1.id);
-    expect(mockReplyRepository.getRepliesToComment).toBeCalledTimes(2);
+    expect(mockReplyRepository.getRepliesToComment).toBeCalledWith([comment1.id, comment2.id]);
+    expect(mockReplyRepository.getRepliesToComment).toBeCalledTimes(1);
     /** checking thread property and value */
     expect(result).toEqual(expect.objectContaining({
       id: thread.id,

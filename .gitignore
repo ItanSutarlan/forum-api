@@ -13,6 +13,9 @@ pids
 *.seed
 *.pid.lock
 
+# EC2 keys
+forum-api-app.pem
+
 # migration config for testing
 config/database/test.json
 

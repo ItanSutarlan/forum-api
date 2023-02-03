@@ -13,11 +13,13 @@ class FindThreadUseCase {
     this._verifyPaylod(id);
     const thread = await this._threadRepository.getThreadById(id);
     const comments = await this._commentRepository.getCommentsByParentId(id);
+    const commentsId = comments.map((comment) => comment.id);
+    const replies = await this._replyRepository.getRepliesToComment(commentsId);
 
-    thread.comments = await Promise.all(comments.map(async (comment) => ({
+    thread.comments = comments.map((comment) => ({
       ...this._mapCommentToModel(comment),
-      replies: await this._getReplies(comment.id),
-    })));
+      replies: this._getReplies(comment.id, replies),
+    }));
 
     return thread;
   }
@@ -27,10 +29,10 @@ class FindThreadUseCase {
     if (typeof id !== 'string') throw new Error('FIND_THREAD_USE_CASE.NOT_MEET_DATA_TYPE_SPECIFICATION');
   }
 
-  async _getReplies(parentId) {
-    const replies = await this._replyRepository.getRepliesToComment(parentId);
+  _getReplies(parentId, replies) {
+    const filteredReplies = replies.filter((reply) => reply.parent_id === parentId);
 
-    const mappedReplies = replies.map((reply) => this._mapReplyToModel(reply));
+    const mappedReplies = filteredReplies.map((reply) => this._mapReplyToModel(reply));
 
     return mappedReplies;
   }

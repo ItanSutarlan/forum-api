@@ -28,13 +28,13 @@ class ReplyRepositoryPostgres extends ReplyRepository {
 
   async getRepliesToComment(commentId) {
     const query = `SELECT
-                    r.id, r.content, u.username, r.date, r.is_deleted
+                    r.*, u.username
                   FROM
                     comments AS r
                   INNER JOIN
                     users AS u ON r.owner = u.id
                   WHERE
-                    r.parent_id = $1
+                    r.parent_id = ANY($1::text[])
                   ORDER BY
                     date ASC;`;
 
