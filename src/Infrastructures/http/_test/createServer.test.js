@@ -25,7 +25,7 @@ describe('HTTP server', () => {
 
     // Assert
     const responseJson = JSON.parse(response.payload);
-    expect(responseJson.statusCode).toEqual(200);
+    expect(response.statusCode).toEqual(200);
     expect(responseJson.value).toEqual('The kitchen is ready to cook!');
   });
 
