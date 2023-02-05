@@ -27,12 +27,26 @@ class CommentRepositoryPostgres extends CommentRepository {
   }
 
   async getCommentsByParentId(parentId) {
-    const query = `SELECT
-                    c.id, c.content, u.username, c.date, c.is_deleted
+    const query = `WITH cte_likes AS (
+                    SELECT
+                      comment_id, COUNT(*)::int AS total_likes
+                    FROM
+                      likes
+                    GROUP BY comment_id
+                  )
+                  SELECT
+                    c.id,
+                    c.content,
+                    u.username,
+                    c.date,
+                    COALESCE(l.total_likes, 0) AS likes,
+                    c.is_deleted
                   FROM
                     comments AS c
                   INNER JOIN
                     users AS u ON c.owner = u.id
+                  LEFT JOIN
+                    cte_likes AS l ON c.id = l.comment_id
                   WHERE
                     c.parent_id = $1
                   ORDER BY

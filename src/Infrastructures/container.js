@@ -18,6 +18,8 @@ const ThreadRepositoryPostgres = require('./repository/ThreadRepositoryPostgres'
 const CommentRepository = require('../Domains/comments/CommentRepository');
 const CommentRepositoryPostgres = require('./repository/CommentRepositoryPostgres');
 const ReplyRepository = require('../Domains/replies/ReplyRepository');
+const LikeRepository = require('../Domains/likes/LikeRepository');
+const LikeRepositoryPostgres = require('./repository/LikeRepositoryPostgres');
 const PasswordHash = require('../Applications/security/PaswordHash');
 const BcryptPasswordHash = require('./security/BcryptPasswordHash');
 const AuthenticationTokenManager = require('../Applications/security/AuthenticationTokenManager');
@@ -35,6 +37,7 @@ const DeleteCommentUseCase = require('../Applications/use_case/comments/DeleteCo
 const AddReplyUseCase = require('../Applications/use_case/replies/AddReplyUseCase');
 const ReplyRepositoryPostgres = require('./repository/ReplyRepositoryPostgres');
 const DeleteReplyUseCase = require('../Applications/use_case/replies/DeleteReplyUseCase');
+const LikeToCommentUseCase = require('../Applications/use_case/likes/LikeToCommentUseCase');
 
 // creating container
 const container = createContainer();
@@ -104,6 +107,17 @@ container.register([
         },
         {
           concrete: nanoid,
+        },
+      ],
+    },
+  },
+  {
+    key: LikeRepository.name,
+    Class: LikeRepositoryPostgres,
+    parameter: {
+      dependencies: [
+        {
+          concrete: pool,
         },
       ],
     },
@@ -300,6 +314,23 @@ container.register([
         {
           name: 'replyRepository',
           internal: ReplyRepository.name,
+        },
+      ],
+    },
+  },
+  {
+    key: LikeToCommentUseCase.name,
+    Class: LikeToCommentUseCase,
+    parameter: {
+      injectType: 'destructuring',
+      dependencies: [
+        {
+          name: 'likeRepository',
+          internal: LikeRepository.name,
+        },
+        {
+          name: 'commentRepository',
+          internal: CommentRepository.name,
         },
       ],
     },
