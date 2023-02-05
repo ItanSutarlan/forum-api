@@ -38,13 +38,14 @@ class FindThreadUseCase {
   }
 
   _mapCommentToModel({
-    id, username, content, date, is_deleted: isDeleted,
+    id, username, content, date, is_deleted: isDeleted, likes: likeCount,
   }) {
     return {
       id,
       username,
       content: isDeleted ? '**komentar telah dihapus**' : content,
       date,
+      likeCount,
     };
   }
 

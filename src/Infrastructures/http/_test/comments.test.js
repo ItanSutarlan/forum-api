@@ -276,4 +276,47 @@ describe('/threads/{threadId}/comments endpoint', () => {
       expect(responseJson.status).toEqual('success');
     });
   });
+
+  describe('PUT /threads/{threadId}/comments/{commentId}/likes', () => {
+    it('should response 401 if headers authorization is not valid', async () => {
+      // Arrange
+      const server = await createServer({});
+
+      // Action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-123/comments/comment-123/likes',
+        headers: {
+          Authorization: 'Bearer wrongaccesstoken',
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(401);
+      expect(responseJson.error).toEqual('Unauthorized');
+    });
+
+    it('should response 404 when threadId or commentId is not found', async () => {
+      // Arrange
+      const server = await createServer(container);
+      const { accessToken } = neededData;
+      // add comment
+
+      // Action
+      const response = await server.inject({
+        method: 'PUT',
+        url: '/threads/thread-123/comments/comment-223/likes',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      // Assert
+      const responseJson = JSON.parse(response.payload);
+      expect(response.statusCode).toEqual(404);
+      expect(responseJson.status).toEqual('fail');
+      expect(responseJson.message).toEqual('thread atau comment id tidak valid');
+    });
+  });
 });

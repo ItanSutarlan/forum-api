@@ -1,5 +1,6 @@
 const AuthenticationsTableTestHelper = require('../../../../tests/AuthenticationsTableTestHelper');
 const CommentsTableTestHelper = require('../../../../tests/CommentsTableTestHelper');
+const LikesTableTestHelper = require('../../../../tests/LikesTableTestHelper');
 const ThreadsTableTestHelper = require('../../../../tests/ThreadsTableTestHelper');
 const UsersTableTestHelper = require('../../../../tests/UsersTableTestHelper');
 const container = require('../../container');
@@ -26,7 +27,26 @@ describe('/threads endpoint', () => {
         parentId: thread1.id,
         isDeleted: true,
       };
+
+      const comment2 = {
+        id: 'comment-223',
+        content: 'sebuah comment',
+        owner: 'user-223',
+        parentId: thread1.id,
+        isDeleted: false,
+      };
       await CommentsTableTestHelper.addComment(comment1);
+      await CommentsTableTestHelper.addComment(comment2);
+
+      /** give two likes to second comment */
+      await LikesTableTestHelper.addLike({
+        commentId: 'comment-223',
+        owner: 'user-123',
+      });
+      await LikesTableTestHelper.addLike({
+        commentId: 'comment-223',
+        owner: 'user-223',
+      });
 
       const reply1 = {
         id: 'reply-223',
@@ -106,6 +126,15 @@ describe('/threads endpoint', () => {
             username: 'dicoding',
             content: '**komentar telah dihapus**',
             date: expect.any(String),
+            likeCount: 0,
+            replies: expect.any(Array),
+          }),
+          expect.objectContaining({
+            id: 'comment-223',
+            username: 'johndoe',
+            content: 'sebuah comment',
+            date: expect.any(String),
+            likeCount: 2,
             replies: expect.any(Array),
           }),
         ]));

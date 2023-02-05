@@ -1,6 +1,7 @@
 const autoBind = require('auto-bind');
 const AddCommentUseCase = require('../../../../Applications/use_case/comments/AddCommentUseCase');
 const DeleteCommentUseCase = require('../../../../Applications/use_case/comments/DeleteCommentUseCase');
+const LikeToCommentUseCase = require('../../../../Applications/use_case/likes/LikeToCommentUseCase');
 
 class CommentsHandler {
   constructor(container) {
@@ -36,6 +37,18 @@ class CommentsHandler {
 
     const deleteCommentUseCase = this._container.getInstance(DeleteCommentUseCase.name);
     await deleteCommentUseCase.execute({ id, owner, parentId });
+
+    return {
+      status: 'success',
+    };
+  }
+
+  async putLikeToCommentHandler(request) {
+    const { id: owner } = request.auth.credentials;
+    const { commentId, threadId } = request.params;
+
+    const likeToCommentUseCase = this._container.getInstance(LikeToCommentUseCase.name);
+    await likeToCommentUseCase.execute({ commentId, owner, threadId });
 
     return {
       status: 'success',
