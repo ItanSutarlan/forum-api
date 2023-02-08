@@ -20,10 +20,9 @@ class AddReplyUseCase {
 
     await this._commentRepository
       .checkAvailabilityComment({ id: parentId, parentId: grandParentId });
-    const addedReply = await this._replyRepository
-      .addReplyToComment({ content, owner, parentId });
 
-    return addedReply;
+    return this._replyRepository
+      .addReplyToComment({ content, owner, parentId });
   }
 }
 

@@ -1,3 +1,5 @@
+const ReturnedThread = require('../../../Domains/threads/entities/ReturnedThread');
+
 class FindThreadUseCase {
   constructor({
     threadRepository,
@@ -10,7 +12,7 @@ class FindThreadUseCase {
   }
 
   async execute({ id }) {
-    this._verifyPaylod(id);
+    this._verifyPayload(id);
     const thread = await this._threadRepository.getThreadById(id);
     const comments = await this._commentRepository.getCommentsByParentId(id);
     const commentsId = comments.map((comment) => comment.id);
@@ -21,10 +23,10 @@ class FindThreadUseCase {
       replies: this._getReplies(comment.id, replies),
     }));
 
-    return thread;
+    return new ReturnedThread(thread);
   }
 
-  _verifyPaylod(id) {
+  _verifyPayload(id) {
     if (!id) throw new Error('FIND_THREAD_USE_CASE.NOT_CONTAIN_NEEDED_PROPERTY');
     if (typeof id !== 'string') throw new Error('FIND_THREAD_USE_CASE.NOT_MEET_DATA_TYPE_SPECIFICATION');
   }
