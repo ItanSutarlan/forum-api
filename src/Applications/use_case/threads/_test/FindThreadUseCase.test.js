@@ -1,5 +1,6 @@
 const CommentRepository = require('../../../../Domains/comments/CommentRepository');
 const ReplyRepository = require('../../../../Domains/replies/ReplyRepository');
+const ReturnedThread = require('../../../../Domains/threads/entities/ReturnedThread');
 const ThreadRepository = require('../../../../Domains/threads/ThreadRepository');
 const FindThreadUseCase = require('../FindThreadUseCase');
 
@@ -84,6 +85,7 @@ describe('FindThreadUseCase', () => {
     expect(mockCommentRepository.getCommentsByParentId).toBeCalledWith(useCasePayload.id);
     expect(mockReplyRepository.getRepliesToComment).toBeCalledWith([comment1.id, comment2.id]);
     expect(mockReplyRepository.getRepliesToComment).toBeCalledTimes(1);
+    expect(result).toBeInstanceOf(ReturnedThread);
     /** checking thread property and value */
     expect(result).toEqual(expect.objectContaining({
       id: thread.id,

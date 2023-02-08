@@ -26,10 +26,7 @@ describe('LikeToCommentUseCase', () => {
     mockCommentRepository.checkAvailabilityComment = jest.fn()
       .mockImplementation(() => Promise.resolve());
     mockLikeRepository.getLikeToComment = jest.fn()
-      .mockImplementation(() => Promise.resolve({
-        comment_id: 'comment-123',
-        owner: 'user-123',
-      }));
+      .mockImplementation(() => Promise.resolve(1));
     mockLikeRepository.deleteLikeToComment = jest.fn()
       .mockImplementation(() => Promise.resolve());
 
