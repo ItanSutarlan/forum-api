@@ -1,0 +1,2 @@
+# forum-api
+Nebula Studios (a fictional game company), the most successful online gaming company, aims to build an official forum application for millions of players worldwide. As a member of the Back-End API team, I am responsible for constructing a robust application foundation by implementing automation testing and clean architecture. The goal is to provide players with a seamless and bug-free discussion experience, while also facilitating future technological development and adaptation.
